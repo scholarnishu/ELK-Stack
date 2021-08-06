@@ -131,7 +131,8 @@ creating vagrant file :
 	`vagrantup.com` for more information on using Vagrant.
 	root@asus:/home/nishu/Desktop/Docker/elk/vagrant# 
 
-	//	starting up VM
+	//starting up VM
+		
 		vagrant up
 
 
@@ -151,7 +152,8 @@ creating vagrant file :
 	==> default: Setting the name of the VM: vagrant_default_1628250509091_38968
 
 
-	//	Getting into virtual machine using ssh connection
+	//Getting into virtual machine using ssh connection
+		
 		vagrant ssh
 
 
@@ -199,7 +201,7 @@ install dockker on `VIRTUALBOX`
 installing everything  on docker containers :
 
 
-	//	nginx
+	//nginx
 
 	docker run --name docker-nginx -p 80:80 nginx
 
@@ -208,7 +210,7 @@ installing everything  on docker containers :
 	0f8b4374722057aea63710550275f66ed9bec42faf2a5fb448283c2a0b1a3645
 	root@vagrant-ubuntu-trusty-64:/home/vagrant# 
 
-	//	pulling the image
+	//pulling the image
 
 	docker pull docker.elastic.co/beats/filebeat:7.14.0
 
@@ -220,7 +222,7 @@ installing everything  on docker containers :
 	root@vagrant-ubuntu-trusty-64:/home/vagrant# 
 
 
-	//	filebeat setup
+	//filebeat setup
 
 
 	root@vagrant-ubuntu-trusty-64:/home/vagrant# docker run \
@@ -235,13 +237,13 @@ so the logs can go to the right address :
 	> -E output.elasticsearch.hosts=["yourIpAddress:9200"] 
 
 
-	//	Download example configuration file
+	//Download example configuration file
 	curl -L -O https://raw.githubusercontent.com/elastic/beats/7.14/deploy/docker/filebeat.docker.yml
 
 edit configuration file as per your credentials `username - passwords`
 
 
-	//	volume mounted configuration
+	//volume mounted configuration
 
 
 	docker run -d \
@@ -253,10 +255,72 @@ edit configuration file as per your credentials `username - passwords`
 	docker.elastic.co/beats/filebeat:7.14.0 filebeat -e -strict.perms=false \
 		-E output.elasticsearch.hosts=["elasticsearch:9200"]
 
-	 //	change `elasticsearch` with Host machine's
+	 //change `elasticsearch` with Host machine's IP
 
 
 Filebeat setup completed.
 
 
-	//	Metricbeat
+	//Metricbeat
+	//pulling the image
+
+	docker pull docker.elastic.co/beats/metricbeat:7.14.0
+
+
+	root@vagrant-ubuntu-trusty-64:/home/vagrant# docker pull docker.elastic.co/beats/metricbeat:7.14.0
+	7.14.0: Pulling from beats/metricbeat
+	Digest: sha256:9fa1ab37d47a92df499e41cda9e4c84e06d0861517e9196d27411bbea6ea9a65
+	Status: Image is up to date for docker.elastic.co/beats/metricbeat:7.14.0
+	root@vagrant-ubuntu-trusty-64:/home/vagrant# 
+
+	//metribeat setup
+
+
+	docker run \
+	docker.elastic.co/beats/metricbeat:7.14.0 \
+	setup -E setup.kibana.host=kibana:5601 \
+	-E output.elasticsearch.hosts=["elasticsearch:9200"]
+
+
+replace these with host machine IP Address `elasticsearch` and `kibana`
+
+	//downloading configuration file
+
+
+	curl -L -O https://raw.githubusercontent.com/elastic/beats/7.14/deploy/docker/metricbeat.docker.yml
+
+edit configuration file as per your credentials `username - passwords`
+
+
+	//mounted volume configuration
+
+
+	docker run -d \
+	--name=metricbeat \
+	--user=root \
+	--volume="$(pwd)/metricbeat.docker.yml:/usr/share/metricbeat/metricbeat.yml:ro" \
+	--volume="/var/run/docker.sock:/var/run/docker.sock:ro" \
+	--volume="/sys/fs/cgroup:/hostfs/sys/fs/cgroup:ro" \
+	--volume="/proc:/hostfs/proc:ro" \
+	--volume="/:/hostfs:ro" \
+	docker.elastic.co/beats/metricbeat:7.14.0 metricbeat -e \
+	-E output.elasticsearch.hosts=["elasticsearch:9200"]
+
+	 //change `elasticsearch` with Host machine's IP
+
+
+Setup is completed.
+
+
+### Monitoring data on Kibana
+
+Visit to the address : `localhost:9200` //elasticesearch port
+Visit to the address : `localhost:5601` //kibana port
+
+
+Goto the kibana and Visite to the `Discover ` and hit `refreash`.
+
+
+That's it.
+
+
