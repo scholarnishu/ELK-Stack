@@ -54,13 +54,15 @@ run the docker file  :
 
 	
 	docker-compose -f docker-compose.yml up -d
-	
+
 	root@asus:/home/nishu/Desktop/Docker/elk# docker-compose -f docker-compose.yml up -d
 	Creating network "elk_default" with the default driver
 	Creating elasticsearch ... done
 	Creating kibana        ... done
 
-verify the containers are running.. :
+verify the containers are running :
+
+	docker-compose ps
 
 	root@asus:/home/nishu/Desktop/Docker/elk# docker-compose ps
     Name                   Command               State                         Ports                       
@@ -102,4 +104,5 @@ you will get output at port `localhost:9200`  :
 and at at port `localhost:5601`
 
 <br/>
-<img src="./snaps.snapKibana.png" width="1080">
+![ScreenShot](snaps/snapKibana.png)
+
