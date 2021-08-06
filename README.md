@@ -117,7 +117,7 @@ For this particular setup we'll be using `vagrant` for creating a `virtual machi
 
 for spacific version you can check `compatiblity index - (support matrix)` by [Clicking here](https://www.elastic.co/support/matrix)
 
-ceating vagrant file :
+creating vagrant file :
 
 	mkdir vagrant && cd $_
 	vagrant init bento/ubuntu-16.04
@@ -177,6 +177,86 @@ Unterstand the diagram
     <img src="snaps/snapDiagram.png" width="720" />
 </p>
 
-Here, Kibana and elasticsearch are up and running inside the `docker containers` on the HOST MACHINE and filebeat and matricbeat are running 
-inside `docker conatiners` in the VIRTUAL MACHINE and getting all the `logs` from all the `containers ` up and running on the VIRTUAL MACHINE.
+	
+Here, Kibana and elasticsearch are up and running inside the `docker containers` on the HOST MACHINE ;
+filebeat and matricbeat are running inside `docker conatiners` in the VIRTUAL MACHINE; getting all the `logs` from all the `containers ` up and running on the VIRTUAL MACHINE.
 
+Now we are good to setup `filebeat` and `metricbeat` :
+
+we'll be following official documentation from 
+
+ - [Filebeat](https://www.elastic.co/guide/en/beats/filebeat/current/running-on-docker.html)
+ - [Metricbeat](https://www.elastic.co/guide/en/beats/metricbeat/current/running-on-docker.html)
+
+Create a VM machine using vagrant :
+
+ -	[Guid to vagrant](https://github.com/thecyberbaby/Vagrant)
+
+install dockker on `VIRTUALBOX`
+
+ -	[Guide to docker](https://docs.docker.com/engine/install/ubuntu/)
+
+installing everything  on docker containers :
+
+
+	//	nginx
+
+	docker run --name docker-nginx -p 80:80 nginx
+
+
+	root@vagrant-ubuntu-trusty-64:/home/vagrant# docker run -d -p 8080:80 --name nginx nginx
+	0f8b4374722057aea63710550275f66ed9bec42faf2a5fb448283c2a0b1a3645
+	root@vagrant-ubuntu-trusty-64:/home/vagrant# 
+
+	//	pulling the image
+
+	docker pull docker.elastic.co/beats/filebeat:7.14.0
+
+
+	root@vagrant-ubuntu-trusty-64:/home/vagrant# docker pull docker.elastic.co/beats/filebeat:7.14.0
+	7.14.0: Pulling from beats/filebeat
+	Digest: sha256:299b23c421cba904d4250fda1c67791b2a3d383da9d96a6e0bbb48f40e3c659f
+	Status: Image is up to date for docker.elastic.co/beats/filebeat:7.14.0
+	root@vagrant-ubuntu-trusty-64:/home/vagrant# 
+
+
+	//	filebeat setup
+
+
+	root@vagrant-ubuntu-trusty-64:/home/vagrant# docker run \
+	> docker.elastic.co/beats/filebeat:7.14.0 \
+	> setup -E setup.kibana.host=kibana:5601 \
+	> -E output.elasticsearch.hosts=["elasticsearch:9200"] 
+
+Notice here you have to replace the `kibana` and `elasticsearch`  with your host machine's ip address
+so the logs can go to the right address :
+
+		setup -E setup.kibana.host=yourIAddress:5601 \
+	> -E output.elasticsearch.hosts=["yourIpAddress:9200"] 
+
+
+		//	Download example configuration file
+		curl -L -O https://raw.githubusercontent.com/elastic/beats/7.14/deploy/docker/filebeat.docker.yml
+
+edit configuration file as per your credentials `username - passwords`
+
+
+		//	volume mounted configuration
+
+
+		docker run -d \
+	  --name=filebeat \
+	  --user=root \
+	  --volume="$(pwd)/filebeat.docker.yml:/usr/share/filebeat/filebeat.yml:ro" \
+	  --volume="/var/lib/docker/containers:/var/lib/docker/containers:ro" \
+	  --volume="/var/run/docker.sock:/var/run/docker.sock:ro" \
+	  docker.elastic.co/beats/filebeat:7.14.0 filebeat -e -strict.perms=false \
+	  -E output.elasticsearch.hosts=["elasticsearch:9200"]
+
+	 //	change `elasticsearch` with Host machine's
+
+
+Filebeat setup completed.
+
+
+	//	Metricbeat
