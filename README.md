@@ -104,5 +104,7 @@ you will get output at port `localhost:9200`  :
 and at at port `localhost:5601`
 
 <br/>
-![ScreenShot](snaps/snapKibana.png)
+<p>
+    <img src="snaps/snapKibana.png" width="220" height="240" />
+</p>
 
