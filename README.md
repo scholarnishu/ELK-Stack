@@ -52,6 +52,9 @@ or you can download thi file from the source:
 use provided `docker-compose.yml` file for provision the elasticsearch and kibana
 run the docker file  :
 
+	
+	docker-compose -f docker-compose.yml up -d
+	
 	root@asus:/home/nishu/Desktop/Docker/elk# docker-compose -f docker-compose.yml up -d
 	Creating network "elk_default" with the default driver
 	Creating elasticsearch ... done
