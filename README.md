@@ -231,27 +231,27 @@ installing everything  on docker containers :
 Notice here you have to replace the `kibana` and `elasticsearch`  with your host machine's ip address
 so the logs can go to the right address :
 
-		setup -E setup.kibana.host=yourIAddress:5601 \
+	setup -E setup.kibana.host=yourIAddress:5601 \
 	> -E output.elasticsearch.hosts=["yourIpAddress:9200"] 
 
 
-		//	Download example configuration file
-		curl -L -O https://raw.githubusercontent.com/elastic/beats/7.14/deploy/docker/filebeat.docker.yml
+	//	Download example configuration file
+	curl -L -O https://raw.githubusercontent.com/elastic/beats/7.14/deploy/docker/filebeat.docker.yml
 
 edit configuration file as per your credentials `username - passwords`
 
 
-		//	volume mounted configuration
+	//	volume mounted configuration
 
 
-		docker run -d \
+	docker run -d \
 	  --name=filebeat \
 	  --user=root \
 	  --volume="$(pwd)/filebeat.docker.yml:/usr/share/filebeat/filebeat.yml:ro" \
 	  --volume="/var/lib/docker/containers:/var/lib/docker/containers:ro" \
 	  --volume="/var/run/docker.sock:/var/run/docker.sock:ro" \
-	  docker.elastic.co/beats/filebeat:7.14.0 filebeat -e -strict.perms=false \
-	  -E output.elasticsearch.hosts=["elasticsearch:9200"]
+	docker.elastic.co/beats/filebeat:7.14.0 filebeat -e -strict.perms=false \
+		-E output.elasticsearch.hosts=["elasticsearch:9200"]
 
 	 //	change `elasticsearch` with Host machine's
 
