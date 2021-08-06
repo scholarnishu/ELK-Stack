@@ -105,6 +105,6 @@ and at at port `localhost:5601`
 
 <br/>
 <p>
-    <img src="snaps/snapKibana.png" width="220" height="240" />
+    <img src="snaps/snapKibana.png" width="720" />
 </p>
 
