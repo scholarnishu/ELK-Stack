@@ -1,0 +1,2 @@
+go solution of docker installation error
+https://stackoverflow.com/questions/48002345/docker-ce-depends-libseccomp2-2-3-0-but-2-2-3-3ubuntu3-is-to-be-installe
