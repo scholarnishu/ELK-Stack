@@ -108,3 +108,75 @@ and at at port `localhost:5601`
     <img src="snaps/snapKibana.png" width="720" />
 </p>
 
+Now `elasticsearch` and `kibana` are fully up and running
+
+
+### Setting up filebeat and MatricBeat in Virtual Machine as client machine 
+
+For this particular setup we'll be using `vagrant` for creating a `virtual machine` (ubuntu 16.04)
+
+for spacific version you can check `compatiblity index - (support matrix)` by [Clicking here](https://www.elastic.co/support/matrix)
+
+ceating vagrant file :
+
+	mkdir vagrant && cd $_
+	vagrant init bento/ubuntu-16.04
+
+	
+	root@asus:/home/nishu/Desktop/Docker/elk# mkdir vagrant && cd $_
+	root@asus:/home/nishu/Desktop/Docker/elk/vagrant# vagrant init bento/ubuntu-16.04
+	A `Vagrantfile` has been placed in this directory. You are now
+	ready to `vagrant up` your first virtual environment! Please read
+	the comments in the Vagrantfile as well as documentation on
+	`vagrantup.com` for more information on using Vagrant.
+	root@asus:/home/nishu/Desktop/Docker/elk/vagrant# 
+
+	//	starting up VM
+		vagrant up
+
+
+	root@asus:/home/nishu/Desktop/Docker/elk/vagrant# vagrant up
+	Bringing machine 'default' up with 'virtualbox' provider...
+	==> default: Box 'bento/ubuntu-16.04' could not be found. Attempting to find and install...
+	    default: Box Provider: virtualbox
+	    default: Box Version: >= 0
+	==> default: Loading metadata for box 'bento/ubuntu-16.04'
+	    default: URL: https://vagrantcloud.com/bento/ubuntu-16.04
+	==> default: Adding box 'bento/ubuntu-16.04' (v202104.19.0) for provider: virtualbox
+	    default: Downloading: https://vagrantcloud.com/bento/boxes/ubuntu-16.04/versions/202104.19.0/providers/virtualbox.box
+	==> default: Successfully added box 'bento/ubuntu-16.04' (v202104.19.0) for 'virtualbox'!
+	==> default: Importing base box 'bento/ubuntu-16.04'...
+	==> default: Matching MAC address for NAT networking...
+	==> default: Checking if box 'bento/ubuntu-16.04' version '202104.19.0' is up to date...
+	==> default: Setting the name of the VM: vagrant_default_1628250509091_38968
+
+
+	//	Getting into virtual machine using ssh connection
+		vagrant ssh
+
+
+	root@asus:/home/nishu/Desktop/Docker/elk/vagrant# vagrant ssh
+	Welcome to Ubuntu 16.04.7 LTS (GNU/Linux 4.4.0-209-generic x86_64)
+
+	 * Documentation:  https://help.ubuntu.com
+	 * Management:     https://landscape.canonical.com
+	 * Support:        https://ubuntu.com/advantage
+
+
+	This system is built by the Bento project by Chef Software
+	More information can be found at https://github.com/chef/bento
+	vagrant@vagrant:~$ 
+
+
+### So, what is actullu happening here
+
+Unterstand the diagram 
+
+<br/>
+<p>
+    <img src="snaps/snapDiagram.png" width="720" />
+</p>
+
+Here, Kibana and elasticsearch are up and running inside the `docker containers` on the HOST MACHINE and filebeat and matricbeat are running 
+inside `docker conatiners` in the VIRTUAL MACHINE and getting all the `logs` from all the `containers ` up and running on the VIRTUAL MACHINE.
+
